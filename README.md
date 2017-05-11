@@ -1,17 +1,10 @@
-# pass-rotate [![Donate with fosspay](https://drewdevault.com/donate/static/donate-with-fosspay.png)](https://drewdevault.com/donate?project_id=6)
+# pass-rotate
 
 pass-rotate is a library and CLI for rotating passwords on various web services.
 This software makes it easier to rotate your passwords, one at a time or in
 bulk, when security events or routine upkeep of your online accounts makes it
 necessary. This is the first step towards a better future - one where users
 never interact with passwords at all and they're managed entirely by software.
-
-For support, visit [#cmpwn on irc.freenode.net](http://webchat.freenode.net/?channels=cmpwn&uio=d4)
-or file a GitHub issue.
-
-**Service providers**: please comment on [this
-proposal](https://github.com/SirCmpwn/pass-rotate/issues/1) on a standardized
-password rotation process.
 
 Adding new services is a tedious process. If you'd like to support pass-rotate,
 you can contribute my [Patreon page](https://patreon.com/sircmpwn) and request
