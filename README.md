@@ -13,6 +13,10 @@ or file a GitHub issue.
 proposal](https://github.com/SirCmpwn/pass-rotate/issues/1) on a standardized
 password rotation process.
 
+Adding new services is a tedious process. If you'd like to support pass-rotate,
+you can contribute my [Patreon page](https://patreon.com/sircmpwn) and request
+support for specific providers.
+
 ## CLI usage
 
 Copy pass-rotate.ini to `~/.config/pass-rotate.ini` and edit it to your liking.
