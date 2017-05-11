@@ -94,7 +94,6 @@ def gen_password(account):
 
 def custom_prompt(prompt, prompt_type):
     p = getpass(prompt="\n  " + prompt + ": ")
-    sys.stderr.write("  ")
     return p
 
 pass_rotate.set_prompt(custom_prompt)
@@ -119,7 +118,7 @@ for account in args.get("<accounts>"):
         provider.prepare(old_password)
         new_password = gen_password(account)
         provider.execute(old_password, new_password)
-        sys.stderr.write("OK")
+        sys.stderr.write("OK\n")
         sys.stderr.flush()
     except:
         sys.stderr.write("FAIL\n")
