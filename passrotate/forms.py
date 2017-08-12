@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 
 def get_form(text, type="form", **kwargs):
-    soup = BeautifulSoup(text, "html.parser")
+    soup = BeautifulSoup(text, "html5lib")
     form = soup.find(type, attrs=kwargs)
     inputs = form.find_all("input")
     data = {
