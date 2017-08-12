@@ -51,7 +51,7 @@ if args["--list-options"]:
         print(provider.__doc__.rstrip())
     sys.exit()
 
-cfg_path = args.get("config") or os.path.expanduser("~/.config/pass-rotate.ini")
+cfg_path = args.get("--config") or os.path.expanduser("~/.config/pass-rotate.ini")
 try:
     with open(cfg_path) as f:
         config = ConfigParser()
