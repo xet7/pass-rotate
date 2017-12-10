@@ -9,3 +9,4 @@ from passrotate.providers.pixiv import Pixiv
 from passrotate.providers.twitter import Twitter
 from passrotate.providers.ycombinator import YCombinator
 from passrotate.providers.facebook import Facebook
+from passrotate.providers.zotero import Zotero
