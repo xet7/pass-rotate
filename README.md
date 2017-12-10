@@ -50,8 +50,7 @@ Please help us add more services - it's easy!
 ## Installation
 
 ```
-./setup.py build
-sudo ./setup.py install
+pip install -e .
 ```
 
 ## Library usage
