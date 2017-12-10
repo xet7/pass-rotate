@@ -8,5 +8,5 @@ setup(name="pass-rotate",
         license="MIT",
         version="1.0",
         scripts=["pass-rotate"],
-        packages=["passrotate"],
+        packages=["passrotate", "passrotate.providers"],
         install_requires=["beautifulsoup4", "docopt", "requests", "html5lib"])
