@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urlencode
 import requests
 
+
 class Amazon(Provider):
     """
     [amazon.com]
@@ -30,7 +31,7 @@ class Amazon(Provider):
             "password": old_password
         })
         r = self._session.post("https://www.amazon.com/ap/signin",
-                data=form, allow_redirects=False)
+                               data=form, allow_redirects=False)
         if r.status_code != 302:
             raise Exception("Current password is not valid for amazon.com")
         r = self._session.get("https://www.amazon.com/gp/css/homepage.html")

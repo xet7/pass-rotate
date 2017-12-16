@@ -1,7 +1,6 @@
 from passrotate.provider import Provider, ProviderOption, register_provider
-from passrotate.forms import get_form
+from passrotate.forms import get_form, custom_get_form
 import requests
-from bs4 import BeautifulSoup
 
 
 class PyPI(Provider):
@@ -33,12 +32,10 @@ class PyPI(Provider):
         if not r.ok:
             raise Exception("Unable to log into PyPI with current password")
         r = self._session.get("https://pypi.python.org/pypi?%3Aaction=user_form")
-        soup = BeautifulSoup(r.text, "html5lib")
-        form = soup.find(id="content").find("form")
-        inputs = form.find_all("input")
-        self._form = {
-            i.get("name", ""): i.get("value", "") or "" for i in inputs if i.get("name", "")
-        }
+        self._form = custom_get_form(
+            r.text,
+            lambda x: x.find(id="content").find("form").find_all("input")
+        )
 
     def execute(self, old_password, new_password):
         self._form.update({
