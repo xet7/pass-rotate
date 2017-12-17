@@ -1,5 +1,5 @@
 from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
-from passrotate.forms import get_form
+from passrotate.forms import get_form, get_form_data
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import requests
@@ -56,9 +56,7 @@ class Linode(Provider):
         # Linode has a weird form on this page
         soup = BeautifulSoup(r.text, "html.parser")
         inputs = soup.find_all("input")
-        form = {
-            i.get("name", "" ): i.get("value", "") or "" for i in inputs if i.get("name", "")
-        }
+        form = get_form_data(inputs)
         form.update({ "auth_password": old_password })
         r = self._session.post("https://manager.linode.com/profile/reauth", data=form)
         r = self._session.get("https://manager.linode.com/profile/auth")

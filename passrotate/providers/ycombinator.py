@@ -33,7 +33,7 @@ class YCombinator(Provider):
     def execute(self, old_password, new_password):
         self._form.update({ "oldpw": old_password, "pw": new_password })
         r = self._session.post("https://news.ycombinator.com/r",
-                data=self._form, allow_redirects=False)
+                               data=self._form, allow_redirects=False)
         if r.status_code != 302:
             raise Exception("Failed to update Hacker News password")
 

@@ -1,8 +1,7 @@
 from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
 from passrotate.forms import get_form
-from bs4 import BeautifulSoup
 import requests
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 
 class Twitter(Provider):
     """
