@@ -93,8 +93,7 @@ def gen_password(account):
     return get_password(account)
 
 def custom_prompt(prompt, prompt_type):
-    p = getpass(prompt="\n  " + prompt + ": ")
-    return p
+    return getpass(prompt="\n  " + prompt + ": ")
 
 pass_rotate.set_prompt(custom_prompt)
 
@@ -119,11 +118,10 @@ for account in args.get("<accounts>"):
         new_password = gen_password(account)
         provider.execute(old_password, new_password)
         sys.stderr.write("OK\n")
-        sys.stderr.flush()
     except:
         sys.stderr.write("FAIL\n")
         sys.stderr.write(traceback.format_exc())
         sys.stderr.write("\nFailed to rotate {}\n".format(account))
         errs += 1
-        sys.stderr.flush()
+    sys.stderr.flush()
 sys.exit(errs)
