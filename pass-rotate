@@ -106,16 +106,17 @@ for account in args.get("<accounts>"):
     cfg = config[account]
     domain = cfg.get("domain") or account
     provider = pass_rotate.get_provider(domain, dict(cfg))
+    pass_name = cfg["pass-name"] if "pass-name" in cfg else account
     if not provider:
         print("Error: pass-rotate does not have a service provider for {}".format(domain))
         errs += 1
         continue
-    sys.stderr.write("Rotating {}... ".format(account))
+    sys.stderr.write("Rotating {}... ".format(pass_name))
     sys.stderr.flush()
     try:
-        old_password = get_password(account)
+        old_password = get_password(pass_name)
         provider.prepare(old_password)
-        new_password = gen_password(account)
+        new_password = gen_password(pass_name)
         provider.execute(old_password, new_password)
         sys.stderr.write("OK\n")
     except:
