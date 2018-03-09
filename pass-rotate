@@ -124,8 +124,8 @@ for account in args.get("<accounts>"):
             provider.prepare(old_password)
         except PrepareException as e:
             sys.stderr.write("FAIL\n")
-            sys.stderr.write("Preparation failed: {}\n".format(e.args))
-            sys.stderr.write("Your password is unchanged, skipping...")
+            sys.stderr.write("Preparation failed: \"{}\"\n".format(e.args[0]))
+            sys.stderr.write("Your password stays unchanged, skipping {}...".format(account))
             sys.stderr.flush()
             errs +=1
             continue
@@ -136,7 +136,7 @@ for account in args.get("<accounts>"):
             provider.execute(old_password, new_password)
         except ExecuteException as e:
             sys.stderr.write("FAIL\n")
-            sys.stderr.write("Execution failed: {}\n".format(e.args))
+            sys.stderr.write("Execution failed: \"{}\"\n".format(e.args[0]))
             sys.stderr.write("Reverting the updated password in your password-store... ")
             sys.stderr.flush()
 
