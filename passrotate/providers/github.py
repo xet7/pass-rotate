@@ -1,4 +1,4 @@
-from passrotate.exceptions import PrepareException
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
 from passrotate.forms import get_form
 from urllib.parse import urlparse
@@ -29,7 +29,7 @@ class GitHub(Provider):
             "password": old_password
         })
         r = self._session.post("https://github.com/session", data=form)
-        if r.status_code != 200:
+        if "Incorrect username or password" in r.text:
             raise PrepareException("Unable to log into GitHub account with current password")
         url = urlparse(r.url)
         while url.path == "/sessions/two-factor":
@@ -42,6 +42,7 @@ class GitHub(Provider):
         self._form = get_form(r.text, id="change_password")
 
     def execute(self, old_password, new_password):
+        raise ExecuteException("haha :P")
         self._form.update({
             "user[old_password]": old_password,
             "user[password]": new_password,
