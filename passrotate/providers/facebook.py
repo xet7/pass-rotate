@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException
 from passrotate.provider import Provider, ProviderOption, register_provider
 from passrotate.forms import get_form
 import requests
@@ -32,9 +33,9 @@ class Facebook(Provider):
 
         ###check for authentication failure
         if "The email address that you&#039;ve entered doesn&#039;t match any account" in r.text:
-            raise Exception("Facebook doesn't recognise this email")
+            raise PrepareException("Facebook doesn't recognise this email")
         if "The password you entered is incorrect" in r.text:
-            raise Exception("Incorrect password")
+            raise PrepareException("Incorrect password")
 
         ###load form
         r = self._session.get("https://m.facebook.com/settings/security/password/")

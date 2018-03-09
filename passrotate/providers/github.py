@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException
 from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
 from passrotate.forms import get_form
 from urllib.parse import urlparse
@@ -29,7 +30,7 @@ class GitHub(Provider):
         })
         r = self._session.post("https://github.com/session", data=form)
         if r.status_code != 200:
-            raise Exception("Unable to log into GitHub account with current password")
+            raise PrepareException("Unable to log into GitHub account with current password")
         url = urlparse(r.url)
         while url.path == "/sessions/two-factor":
             form = get_form(r.text)

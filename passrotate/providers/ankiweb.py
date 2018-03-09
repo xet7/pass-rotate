@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, register_provider
 from passrotate.forms import get_form
 import requests
@@ -30,7 +31,7 @@ class AnkiWeb(Provider):
         r = self._session.post("https://ankiweb.net/account/login",
                                data=self._form, allow_redirects=False)
         if not r.ok or r.status_code != 302:
-            raise Exception("Unable to log into AnkiWeb with current password")
+            raise PrepareException("Unable to log into AnkiWeb with current password")
         r = self._session.get("https://ankiweb.net/account/settings")
         self._form = get_form(r.text)
 
@@ -43,7 +44,7 @@ class AnkiWeb(Provider):
         r = self._session.post("https://ankiweb.net/account/settings",
                                data=self._form, allow_redirects=False)
         if not r.ok or r.status_code != 302:
-            raise Exception("Failed to update AnkiWeb password")
+            raise ExecuteException("Failed to update AnkiWeb password")
 
 
 register_provider(AnkiWeb)

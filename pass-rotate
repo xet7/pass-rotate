@@ -23,6 +23,8 @@ import sys
 import os
 from getpass import getpass
 
+from passrotate.exceptions import PrepareException, ExecuteException
+
 args = docopt(__doc__, version='pass-rotate 1.0')
 
 pass_rotate = PassRotate()
@@ -113,11 +115,38 @@ for account in args.get("<accounts>"):
         continue
     sys.stderr.write("Rotating {}... ".format(pass_name))
     sys.stderr.flush()
+
+    # we keep the global exception catching to catch other errors as well
     try:
         old_password = get_password(pass_name)
-        provider.prepare(old_password)
-        new_password = gen_password(pass_name)
-        provider.execute(old_password, new_password)
+
+        try:
+            provider.prepare(old_password)
+        except PrepareException as e:
+            sys.stderr.write("FAIL\n")
+            sys.stderr.write("Preparation failed: {}\n".format(e.args))
+            sys.stderr.write("Your password is unchanged, skipping...")
+            sys.stderr.flush()
+            errs +=1
+            continue
+
+
+        try:
+            new_password = gen_password(pass_name)
+            provider.execute(old_password, new_password)
+        except ExecuteException as e:
+            sys.stderr.write("FAIL\n")
+            sys.stderr.write("Execution failed: {}\n".format(e.args))
+            sys.stderr.write("Reverting the updated password in your password-store... ")
+            sys.stderr.flush()
+
+            # todo: revert password here
+
+            sys.stderr.write("done\n")
+            sys.stderr.flush()
+            errs +=1
+            continue
+
         sys.stderr.write("OK\n")
     except:
         sys.stderr.write("FAIL\n")

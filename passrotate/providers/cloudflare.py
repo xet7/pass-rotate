@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, register_provider
 from passrotate.forms import get_form
 from urllib.parse import urlparse
@@ -39,7 +40,7 @@ class Cloudflare(Provider):
         r = self._session.post("https://www.cloudflare.com/a/login", data=form)
         url = urlparse(r.url)
         if url.path != "/a/overview":
-            raise Exception("Failed to log into Cloudflare with current password")
+            raise PrepareException("Failed to log into Cloudflare with current password")
         r = self._session.get("https://www.cloudflare.com/a/account/my-account")
         bs = get_bootstrap(r.text)
         self._atok = bs["atok"]
@@ -53,6 +54,6 @@ class Cloudflare(Provider):
             "x-atok": self._atok
         })
         if r.status_code != 200:
-            raise Exception("Failed to update Cloudflare password")
+            raise ExecuteException("Failed to update Cloudflare password")
 
 register_provider(Cloudflare)

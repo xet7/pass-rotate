@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
 import requests
 
@@ -28,7 +29,7 @@ class Discord(Provider):
                 json=data)
 
         if r.status_code != 200:
-            raise Exception("Unable to log into Discord with your current password: {}".format(r.json()))
+            raise PrepareException("Unable to log into Discord with your current password: {}".format(r.json()))
 
         json = r.json()
         if json.get("mfa"):
@@ -61,7 +62,7 @@ class Discord(Provider):
                     code = self.prompt("Enter your two factor (TOTP) code", PromptType.totp)
                     data["code"] = code
                 else:
-                    raise Exception("Failed to update Discord password: {}".format(json))
+                    raise ExecuteException("Failed to update Discord password: {}".format(json))
             else:
                 break
 
