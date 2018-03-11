@@ -73,6 +73,7 @@ if args["--list-accounts"]:
 
 _get_password_cmd = config["pass-rotate"]["get-password"]
 _gen_password_cmd = config["pass-rotate"]["gen-password"]
+_set_password_cmd = config["pass-rotate"]["set-password"]
 
 def get_password(account):
     env = os.environ
@@ -93,6 +94,21 @@ def gen_password(account):
     if subp.returncode != 0:
         raise Exception("gen_password command exited with nonzero status code")
     return get_password(account)
+
+def set_password(account, password):
+    env = os.environ
+    env.update({"ACCOUNT": account})
+    subp = subprocess.Popen([_set_password_cmd],
+                          shell=True,
+                          env=env,
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.STDOUT,
+                          stdin=subprocess.PIPE)
+
+
+    subp.communicate(input="{}\n{}\n".format(password, password).encode("utf-8"))
+    if subp.returncode != 0:
+        raise Exception("set_password command exited with nonzero status code")
 
 def custom_prompt(prompt, prompt_type):
     return getpass(prompt="\n  " + prompt + ": ")
@@ -140,7 +156,7 @@ for account in args.get("<accounts>"):
             sys.stderr.write("Reverting the updated password in your password-store... ")
             sys.stderr.flush()
 
-            # todo: revert password here
+            set_password(pass_name, old_password)
 
             sys.stderr.write("done\n")
             sys.stderr.flush()

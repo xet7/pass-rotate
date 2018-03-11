@@ -42,7 +42,6 @@ class GitHub(Provider):
         self._form = get_form(r.text, id="change_password")
 
     def execute(self, old_password, new_password):
-        raise ExecuteException("haha :P")
         self._form.update({
             "user[old_password]": old_password,
             "user[password]": new_password,
