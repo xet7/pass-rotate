@@ -13,3 +13,4 @@ from passrotate.providers.zotero import Zotero
 from passrotate.providers.pypi import PyPI
 from passrotate.providers.ankiweb import AnkiWeb
 from passrotate.providers.gitlab import GitLab
+from passrotate.providers.wikipedia import Wikipedia
