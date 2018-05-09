@@ -14,7 +14,10 @@ def get_form_data(inputs: ResultSet) -> FormData:
     Returns dictionary with (name, value) pairs from inputs.
     """
     return {
-        i.get("name", ""): i.get("value", "") or "" for i in inputs if i.get("name", "")
+        i.get("name", ""): \
+        i.get("value", "") or "" if i.name == "input" \
+        else i.find("option", attrs={"selected": "selected"}).get("value") \
+        for i in inputs if i.get("name", "")
     }
 
 
@@ -30,7 +33,7 @@ def get_form(text: str, type: str = "form", **kwargs) -> FormData:
     """
     soup = BeautifulSoup(text, "html5lib")
     form = soup.find(type, attrs=kwargs)
-    inputs = form.find_all("input")
+    inputs = form.find_all("input") + form.find_all("select")
     return get_form_data(inputs)
 
 
