@@ -35,6 +35,13 @@ class YourProvider(Provider):
     def __init__(self, options):
         self.username = options["username"]
 
+    @staticmethod
+    def detect(dom):
+        # A method that takes a beautifulsoup tree and returns a score 0.0-1.0
+        # representing how certain it is that this provider can change the
+        # password
+        pass
+
     def prepare(self, old_password):
         pass # TODO
 
@@ -63,3 +70,12 @@ You can use `passrotate.form.get_form` to prepare a dict suitable for submission
 to requests.Session.post derived from the inputs on a form in the response text.
 Then you can add to this the appropriate fields from your options and the
 supplied passwords.
+
+Providers that target self-hosted software (such as Mastodon instances) should
+implement the optional `detect()` method. This allows users to insert the
+domain of their instances, and each provider can return a score representing
+the likelyhood that the page presented can be rotated by the provider. The
+function is passed a beautiful soup parse tree and should check for elements on
+the page to return a score ranging from 0.0 (certainly not my page) to 1.0
+(guaranteed to be a service I can rotate). The domain they should target is
+included in options to their `__init__()`.

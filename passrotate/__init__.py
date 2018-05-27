@@ -1,4 +1,4 @@
-from passrotate.provider import get_provider, get_providers
+from passrotate.provider import get_provider, get_providers, detect_provider_score
 import passrotate.providers
 from getpass import getpass
 
@@ -16,6 +16,15 @@ class PassRotate():
         cls = self.get_provider_class(name)
         if not cls:
             return None
+        instance = cls(options)
+        instance._prompt = self.prompt
+        return instance
+
+    def detect_provider(self, domain, options):
+        cls = detect_provider_score(domain)
+        if not cls:
+            return None
+        options["domain"] = domain
         instance = cls(options)
         instance._prompt = self.prompt
         return instance

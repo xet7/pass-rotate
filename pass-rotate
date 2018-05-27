@@ -112,7 +112,9 @@ for account in args.get("<accounts>"):
     provider = pass_rotate.get_provider(domain, dict(cfg))
     pass_name = cfg["pass-name"] if "pass-name" in cfg else account
     if not provider:
-        print("Error: pass-rotate does not have a service provider for {}".format(domain))
+        provider = pass_rotate.detect_provider(domain, dict(cfg))
+    if not provider:
+        print("pass-rotate does not have a service provider for {}".format(domain))
         errs += 1
         continue
     sys.stderr.write("Rotating {}... ".format(pass_name))
