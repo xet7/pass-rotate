@@ -1,4 +1,4 @@
-from passrotate.provider import Provider, ProviderOption, register_provider
+from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
 from passrotate.forms import get_form
 import requests
 
@@ -45,11 +45,19 @@ class Mastodon(Provider):
         })
         r = self._session.post(
             "https://{}/auth/sign_in".format(self.domain),
-            data=self._form,
-            allow_redirects=False
+            data=self._form
         )
-        if not r.ok or r.status_code != 302:
+        if not r.ok or r.status_code not in (302, 200):
             raise Exception("Unable to log into {} with current password".format(self.domain))
+        while "auth/sign_in" in r.url: # We need to 2fa
+            self._form = get_form(r.text, id="edit_user")
+            code = self.prompt("Enter your two factor (TOTP) code", PromptType.totp)
+            self._form.update({"user[otp_attempt]": code})
+            r = self._session.post(
+                "https://{}/auth/sign_in".format(self.domain),
+                data=self._form,
+            )
+
         r = self._session.get("https://{}/auth/edit".format(self.domain))
         self._form = get_form(r.text, id="edit_user")
 
