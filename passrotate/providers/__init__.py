@@ -17,3 +17,4 @@ from passrotate.providers.wikipedia import Wikipedia
 from passrotate.providers.aur import ArchUserRepository
 from passrotate.providers.mastodon import Mastodon
 from passrotate.providers.gnusocial import GNUSocial
+from passrotate.providers.reddit import Reddit
