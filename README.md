@@ -15,7 +15,8 @@ support for specific providers.
 Copy pass-rotate.ini to `~/.config/pass-rotate.ini` and edit it to your liking.
 You'll have to find a shell command (or write a script) that gets passwords from
 and adds passwords to your password manager. Examples for
-[pass](http://passwordstore.org) are provided in the example config.
+[pass](http://passwordstore.org) and [1password](https://1password.com)
+are provided in the example config.
 
 Rotate passwords like so:
 
