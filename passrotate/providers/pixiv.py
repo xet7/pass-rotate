@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, register_provider
 from passrotate.forms import get_form
 import requests
@@ -35,7 +36,7 @@ class Pixiv(Provider):
                 params={"type": "password"})
         url = urlparse(r.url)
         if url.path != "/setting_userdata.php":
-            raise Exception("Current password for pixiv is incorrect")
+            raise PrepareException("Current password for pixiv is incorrect")
         self._form = get_form(r.text, action="setting_userdata.php")
         self._form.update({
             "check_pass": old_password
@@ -54,6 +55,6 @@ class Pixiv(Provider):
                 data=self._form)
         url = urlparse(r.url)
         if url.path == "/setting_userdata.php":
-            raise Exception("Failed to update pixiv password")
+            raise ExecuteException("Failed to update pixiv password")
 
 register_provider(Pixiv)

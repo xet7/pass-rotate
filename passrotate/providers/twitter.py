@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException
 from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
 from passrotate.forms import get_form
 import requests
@@ -36,16 +37,16 @@ class Twitter(Provider):
         })
         url = urlparse(r.url)
         if url.path == "/login/error":
-            raise Exception("Current password for Twitter is incorrect")
+            raise PrepareException("Current password for Twitter is incorrect")
         if url.path == "/account/locked":
-            raise Exception("Twitter has locked us out of further login attempts. Wait 60 minutes and try again.")
+            raise PrepareException("Twitter has locked us out of further login attempts. Wait 60 minutes and try again.")
         while url.path == "/account/login_verification":
             data = get_form(r.text)
             challenge_type = data.get("challenge_type")
             if challenge_type == "Sms":
                 response = self.prompt("Enter your SMS authorization code", PromptType.sms)
             else:
-                raise Exception("Unsupported two-factor method '{}'".format(challenge_type))
+                raise PrepareException("Unsupported two-factor method '{}'".format(challenge_type))
             data.update({ "challenge_response": response })
             r = self._session.post(
                     "https://mobile.twitter.com/account/login_verification",

@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, register_provider
 import requests
 
@@ -30,7 +31,7 @@ class Zotero(Provider):
             "oid_identifier": ""
         })
         if "Invalid credentials provided" in r.text:
-            raise Exception("Unable to log into Zotero with current password")
+            raise PrepareException("Unable to log into Zotero with current password")
         r = self._session.get("https://www.zotero.org/settings/account")
 
     def execute(self, old_password, new_password):
@@ -45,7 +46,7 @@ class Zotero(Provider):
             data=form_data, allow_redirects=False
         )
         if "Account Settings Saved" not in r.text:
-            raise Exception("Failed to update Zotero password")
+            raise ExecuteException("Failed to update Zotero password")
 
 
 register_provider(Zotero)

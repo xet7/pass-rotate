@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, register_provider
 from passrotate.forms import get_form, custom_get_form
 import requests
@@ -30,7 +31,7 @@ class PyPI(Provider):
         r = self._session.post("https://pypi.python.org/pypi",
                                data=self._form, allow_redirects=False)
         if not r.ok:
-            raise Exception("Unable to log into PyPI with current password")
+            raise PrepareException("Unable to log into PyPI with current password")
         r = self._session.get("https://pypi.python.org/pypi?%3Aaction=user_form")
         self._form = custom_get_form(
             r.text,
@@ -45,6 +46,6 @@ class PyPI(Provider):
         r = self._session.post("https://pypi.python.org/pypi",
                                data=self._form, allow_redirects=False)
         if not r.ok:
-            raise Exception("Failed to update PyPI password")
+            raise ExecuteException("Failed to update PyPI password")
 
 register_provider(PyPI)

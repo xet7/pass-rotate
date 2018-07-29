@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
 from passrotate.forms import get_form, get_form_data
 from bs4 import BeautifulSoup
@@ -41,7 +42,7 @@ class Linode(Provider):
         soup = BeautifulSoup(r.text, "html.parser")
         title = soup.find("title")
         if title.text != "Session Engaged!":
-            raise Exception("Unable to log into Linode with your current password")
+            raise PrepareException("Unable to log into Linode with your current password")
         r = self._session.get("https://manager.linode.com/linodes")
         url = urlparse(r.url)
         if url.path.startswith("/session/twofactor"):
@@ -74,6 +75,6 @@ class Linode(Provider):
         })
         r = self._session.post("https://manager.linode.com/profile/password", data=self._form)
         if r.status_code != 200:
-            raise Exception("Failed to update Linode password")
+            raise ExecuteException("Failed to update Linode password")
 
 register_provider(Linode)

@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, register_provider
 from passrotate.forms import get_form
 import requests
@@ -26,7 +27,7 @@ class YCombinator(Provider):
             "pw": old_password
         }, allow_redirects=False)
         if "Bad login" in r.text:
-            raise Exception("Unable to log into Hacker News with current password")
+            raise PrepareException("Unable to log into Hacker News with current password")
         r = self._session.get("https://news.ycombinator.com/changepw")
         self._form = get_form(r.text)
 
@@ -35,6 +36,6 @@ class YCombinator(Provider):
         r = self._session.post("https://news.ycombinator.com/r",
                                data=self._form, allow_redirects=False)
         if r.status_code != 302:
-            raise Exception("Failed to update Hacker News password")
+            raise ExecuteException("Failed to update Hacker News password")
 
 register_provider(YCombinator)

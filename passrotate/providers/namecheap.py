@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
 from passrotate.forms import get_form
 from urllib.parse import urlparse
@@ -36,7 +37,7 @@ class Namecheap(Provider):
         r = self._session.post("https://www.namecheap.com/myaccount/login.aspx", data=form)
         url = urlparse(r.url)
         if url.path == "/myaccount/login.aspx":
-            raise Exception("Failed to log into Namecheap with current password")
+            raise PrepareException("Failed to log into Namecheap with current password")
         if url.path == "/myaccount/twofa/secondauth.aspx":
             form = get_form(r.text, id="aspnetForm")
             form.update({
@@ -47,7 +48,7 @@ class Namecheap(Provider):
             })
             r = self._session.post("https://www.namecheap.com/myaccount/twofa/secondauth.aspx", data=form)
             if "You have reached the limit" in r.text:
-                raise Exception("Namecheap has locked us out of further 2FA attempts. Wait 60 minutes and try again.")
+                raise PrepareException("Namecheap has locked us out of further 2FA attempts. Wait 60 minutes and try again.")
             while url.path == "/myaccount/twofa/secondauth.aspx":
                 form = get_form(r.text, id="aspnetForm")
                 code = self.prompt("Enter your SMS authorization code", PromptType.sms)
@@ -69,6 +70,6 @@ class Namecheap(Provider):
             "_NcCompliance": self._ncCompliance
         } ,allow_redirects=False)
         if r.status_code != 200:
-            raise Exception("Failed to update NameCheap password")
+            raise ExecuteException("Failed to update NameCheap password")
 
 register_provider(Namecheap)

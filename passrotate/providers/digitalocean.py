@@ -1,3 +1,4 @@
+from passrotate.exceptions import PrepareException, ExecuteException
 from passrotate.provider import Provider, ProviderOption, register_provider
 from passrotate.forms import get_form
 from bs4 import BeautifulSoup
@@ -32,7 +33,7 @@ class DigitalOcean(Provider):
         r = self._session.post("https://cloud.digitalocean.com/sessions", data=form)
         url = urlparse(r.url)
         if url.path != "/droplets":
-            raise Exception("Unable to log into Digital Ocean with current password")
+            raise PrepareException("Unable to log into Digital Ocean with current password")
         soup = BeautifulSoup(r.text, "html.parser")
         for script in soup.find_all("script"):
             text = script.text.strip()
@@ -60,6 +61,6 @@ class DigitalOcean(Provider):
                     "X-CSRF-Token": self._csrf_token
                 })
         if r.status_code != 200:
-            raise Exception("Failed to update Digital Ocean password")
+            raise ExecuteException("Failed to update Digital Ocean password")
 
 register_provider(DigitalOcean)
